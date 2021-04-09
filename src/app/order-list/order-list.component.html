@@ -1,0 +1,30 @@
+<mat-sidenav-container>
+  <mat-sidenav  #sidenav mode="side" opened class="example-sidenav">
+    <div fxLayout fxLayoutAlign="center center" class="orderContainerHeader">
+      <h2>Orders</h2>
+    </div>
+    <div class="filter-button-group" fxlayout fxLayoutAlign="center">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle checked="true" (change)="filterOrders($event.value)" value="New">Neu</mat-button-toggle>
+        <mat-button-toggle (change)="filterOrders($event.value)" value="Küche">Küche</mat-button-toggle>
+        <mat-button-toggle (change)="filterOrders($event.value)" value="Lieferung">Lieferung</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <table mat-table [dataSource]="orders">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td class="menu-item"  (click)="onSelectOrder(element)" mat-cell *matCellDef="let element">
+            {{ element.name }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-order-detail></app-order-detail>
+  </mat-sidenav-content>
+</mat-sidenav-container>

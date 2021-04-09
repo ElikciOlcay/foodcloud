@@ -1,0 +1,24 @@
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  padding-top: 100px;
+  width: 300px;
+  position: fixed;
+}
+
+table.mat-table {
+  width: 100%;
+}
+
+.menu-item{
+  cursor: pointer;
+  height: 60px;
+}
+
+.menu-item:hover {
+  color: black
+}
+
+

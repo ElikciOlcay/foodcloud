@@ -1,0 +1,18 @@
+<mat-toolbar>
+  <div>
+    <a class="logo" routerLink="/">FoodCloud</a>
+  </div>
+  <div fxFlex fxLayout fxLayoutAlign="end">
+    <ul fxLayout fxLayoutGap="20px" class="nav-items">
+      <li *ngFor="let link of links">
+        <a [routerLink]="link.route">{{ link.title }}</a>
+      </li>
+      <li>
+        <mat-slide-toggle #online color="primary" checked="true">{{online.checked? 'online' : 'offline'}}</mat-slide-toggle>
+      </li>
+    </ul>
+  </div>
+</mat-toolbar>
+
+
+

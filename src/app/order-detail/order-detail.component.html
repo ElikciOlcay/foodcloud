@@ -1,0 +1,14 @@
+<section fxLayout="column" *ngIf="order">
+  <mat-toolbar color="primary">
+    <div class="order-toolbar" fxLayout="row" fxLayoutAlign="space-between">
+      <h1>{{ order.name }}</h1>
+      <button mat-raised-button color="basic">Deliver</button>
+    </div>
+  </mat-toolbar>
+<div>
+  <h2>Order Items</h2>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let item of order.orderItems">{{ item.name }}</mat-list-item>
+  </mat-list>
+</div>
+</section>
