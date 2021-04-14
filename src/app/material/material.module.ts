@@ -12,6 +12,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatGridListModule } from '@angular/material/grid-list';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 
 @NgModule({
   declarations: [],
@@ -28,7 +32,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatButtonModule,
     MatButtonToggleModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatGridListModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   exports: [
     MatSliderModule,
@@ -42,7 +49,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatButtonModule,
     MatButtonToggleModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatGridListModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class MaterialModule { }

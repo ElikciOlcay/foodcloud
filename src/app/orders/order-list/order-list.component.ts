@@ -3,8 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { EventManager } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { Order } from '../models/order.model';
-import { OrderService } from '../services/order.service';
+import { Order } from '../../models/order.model';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-order-list',

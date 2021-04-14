@@ -1,0 +1,17 @@
+<div class="login-form-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <label>E-Mail
+      <input type="text" formControlName="email">
+    </label>
+    <label>Passwort
+      <input type="password" formControlName="password">
+    </label>
+    <button type="submit" [disabled]="!loginForm.valid">Submit</button>
+  </form>
+</div>
+
+<mat-form-field appearance="fill">
+  <mat-label>Email</mat-label>
+  <input matInput placeholder="Email">
+  <mat-hint>Hint</mat-hint>
+</mat-form-field>
