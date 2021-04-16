@@ -15,13 +15,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
+import { HomeModule } from './home/home.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     NavigationComponent,
-    LoginComponent,
   ],
   imports: [
     CommonModule,
@@ -32,7 +31,8 @@ import { FormsModule } from '@angular/forms';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     SharedModule,
-    OrdersModule
+    OrdersModule,
+    HomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

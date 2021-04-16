@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
@@ -12,7 +13,7 @@ export class NavigationComponent implements OnInit {
   private authSubs: Subscription;
   isAuth: boolean;
 
-  constructor(private auth: AuthService) { }
+  constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.authSubs = this.auth.authChanged.subscribe(authStatus => {
@@ -22,6 +23,10 @@ export class NavigationComponent implements OnInit {
 
   logOut(): void {
     this.auth.logOut();
+  }
+
+  navToLogin(): void {
+    this.router.navigate(['/']);
   }
 
 }

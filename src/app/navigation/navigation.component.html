@@ -2,13 +2,18 @@
   <div>
     <a class="logo" routerLink="/">FoodCloud</a>
   </div>
-  <div *ngIf="isAuth" fxFlex fxLayout fxLayoutAlign="end">
+  <div fxFlex fxLayout fxLayoutAlign="end">
     <ul fxLayout fxLayoutGap="20px" class="nav-items">
-      <li>
-        <mat-slide-toggle #online color="primary" checked="true">{{online.checked? 'online' : 'offline'}}</mat-slide-toggle>
-      </li>
-      <li>
-        <button mat-button (click)="logOut()">Sign Out</button>
+      <div fxLayout *ngIf="isAuth" >
+        <li>
+          <mat-slide-toggle #online color="primary" checked="true">{{online.checked? 'online' : 'offline'}}</mat-slide-toggle>
+        </li>
+        <li>
+          <button mat-button (click)="logOut()">Sign Out</button>
+        </li>
+      </div>
+      <li *ngIf="!isAuth">
+        <button mat-button (click)="navToLogin()">Log In</button>
       </li>
     </ul>
   </div>

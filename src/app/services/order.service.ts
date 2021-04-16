@@ -13,7 +13,6 @@ export class OrderService implements OnDestroy{
 
   selectedOrderChanged = new Subject<Order>();
   ordersChanged = new Subject<Order[]>();
-  authChangedSubs: Subscription;
   private userId: string;
   private orders: Order[];
 
@@ -37,7 +36,7 @@ export class OrderService implements OnDestroy{
   ];
 
   constructor(private db: AngularFirestore, private auth: AuthService) {
-
+    this.addTest();
   }
 
   selectOrder(order: Order): void {
@@ -59,22 +58,10 @@ export class OrderService implements OnDestroy{
         )
       ).subscribe((orders: Order[]) => {
         this.orders = orders;
-        this.hasNotAcceptedOrder(orders);
         this.ordersChanged.next(this.orders);
       });
   }
 
-  hasNotAcceptedOrder(orders: Order[]): void {
-    orders.every(order => {
-      if (order.accepted === false) {
-        this.sound.once('load', () => {
-          this.sound.play();
-        });
-        return false;
-      }
-      return true;
-    });
-  }
 
 
   filterOrders(status: string): void {
@@ -94,7 +81,7 @@ export class OrderService implements OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.authChangedSubs.unsubscribe();
+
   }
 
 }

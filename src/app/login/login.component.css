@@ -1,8 +1,5 @@
-.form-container {
-  height: 100%;
-  background-color: white;
-  margin-top: 50px;
-  border-radius: 7px;
+.loginForm {
+  width: 100%;
 }
 
 mat-form-field{
