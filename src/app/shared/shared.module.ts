@@ -4,7 +4,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { MaterialModule } from '../material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MaterialModule,
     FlexLayoutModule,
     LayoutModule,
+    FormsModule,
     ReactiveFormsModule
   ],
   exports: [
@@ -22,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MaterialModule,
     FlexLayoutModule,
     LayoutModule,
+    FormsModule,
     ReactiveFormsModule
   ]
 })

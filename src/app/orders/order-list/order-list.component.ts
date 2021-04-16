@@ -5,6 +5,7 @@ import { EventManager } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Order } from '../../models/order.model';
 import { OrderService } from '../../services/order.service';
+import {Howl, Howler} from 'howler';
 
 @Component({
   selector: 'app-order-list',
@@ -18,6 +19,10 @@ export class OrderListComponent implements OnInit, AfterViewInit{
   selectedOrderSubscription: Subscription;
   orderSubscription: Subscription;
   displayedColumns: string[] = ['name'];
+
+  sound = new Howl({
+    src: ['../../assets/sounds/bell.wav']
+  });
 
   @ViewChild(MatPaginator) paninator: MatPaginator;
 
@@ -48,6 +53,10 @@ export class OrderListComponent implements OnInit, AfterViewInit{
 
   onSelectOrder(order: Order): void {
     this.orderService.selectOrder(order);
+  }
+
+  makeOrder(): void {
+    this.orderService.addTest();
   }
 
 }

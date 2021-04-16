@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { OrderService } from '../services/order.service';
 
 @Component({
   selector: 'app-home',
@@ -13,13 +14,9 @@ export class HomeComponent implements OnInit {
     password: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private os: OrderService) { }
 
   ngOnInit(): void {
-  }
-
-  onSubmit(): void {
-    console.log(this.loginForm.value);
   }
 
 }

@@ -1,17 +1,21 @@
-<div class="login-form-container">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <label>E-Mail
-      <input type="text" formControlName="email">
-    </label>
-    <label>Passwort
-      <input type="password" formControlName="password">
-    </label>
-    <button type="submit" [disabled]="!loginForm.valid">Submit</button>
+<div class="form-container" fxLayoutAlign="center start">
+  <form fxLayout="column" fxFlex="400px" fxFlex.lt-sm="90%" fxLayoutGap="20px" fxLayoutAlign="center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h2>Login</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" id=" " formControlName="email" placeholder="Email">
+      <mat-error *ngIf="loginForm.get('email').invalid">Ungültige Email</mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Passwort</mat-label>
+      <input matInput type="password" formControlName="password" placeholder="Passwort">
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary" [disabled]="!loginForm.valid">Submit</button>
   </form>
 </div>
 
-<mat-form-field appearance="fill">
-  <mat-label>Email</mat-label>
-  <input matInput placeholder="Email">
-  <mat-hint>Hint</mat-hint>
-</mat-form-field>
+
+
+
+
+

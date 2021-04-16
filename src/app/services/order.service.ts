@@ -1,29 +1,43 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, Subject } from 'rxjs';
-import { OrderItem } from '../models/order-item';
+import { Subject, Subscription } from 'rxjs';
 import { Order } from '../models/order.model';
-import { flatMap, map } from 'rxjs/operators';
-import { ThrowStmt } from '@angular/compiler';
+import { map, share } from 'rxjs/operators';
+import { AuthService } from './auth.service';
+import {Howl, Howler} from 'howler';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService {
+export class OrderService implements OnDestroy{
 
   selectedOrderChanged = new Subject<Order>();
   ordersChanged = new Subject<Order[]>();
-
+  authChangedSubs: Subscription;
+  private userId: string;
   private orders: Order[];
+
+  sound = new Howl({
+    src: ['../../assets/sounds/bell.wav']
+  });
+
   private dummyOrders: Order[] = [
     {
       name: 'Johannes Huber',
-      orderItems: [{name: 'Pizza'}, {name: 'Cola'}]
+      orderItems: [{name: 'Pizza'}, {name: 'Cola'}],
+      price: 12.90,
+      accepted: true
+    },
+    {
+      name: 'Olcay Elikci',
+      orderItems: [{name: 'Spaghetti'}, {name: 'Cola'}],
+      price: 12.90,
+      accepted: false
     }
   ];
 
-  constructor(private db: AngularFirestore) {
-    this.addDummyData();
+  constructor(private db: AngularFirestore, private auth: AuthService) {
+
   }
 
   selectOrder(order: Order): void {
@@ -31,7 +45,8 @@ export class OrderService {
   }
 
   getOrders(): void {
-    this.db.collection('orders')
+    this.userId = this.auth.getCurrentUserId();
+    this.db.collection('restaurants').doc(this.userId).collection('orders')
       .snapshotChanges()
       .pipe(
         map(ordersFromDb => ordersFromDb
@@ -44,16 +59,23 @@ export class OrderService {
         )
       ).subscribe((orders: Order[]) => {
         this.orders = orders;
-        this.orders.forEach(order => {
-          this.db.collection('orders').doc(order.id).collection('orderItems')
-            .valueChanges()
-            .subscribe((items: any[]) => {
-              order.orderItems = items;
-              this.ordersChanged.next([...this.orders]);
-            });
-        });
+        this.hasNotAcceptedOrder(orders);
+        this.ordersChanged.next(this.orders);
       });
   }
+
+  hasNotAcceptedOrder(orders: Order[]): void {
+    orders.every(order => {
+      if (order.accepted === false) {
+        this.sound.once('load', () => {
+          this.sound.play();
+        });
+        return false;
+      }
+      return true;
+    });
+  }
+
 
   filterOrders(status: string): void {
     const filteredOrders = this.orders.filter(item => {
@@ -62,15 +84,17 @@ export class OrderService {
     this.ordersChanged.next(filteredOrders);
   }
 
-  addDummyData(): void {
-    for (let i = 0; i < 1; i++ ) {
-      this.db.collection('orders').add(this.dummyOrders[0]).then( ref => {
-        const orderId = ref.id;
-        this.dummyOrders[0].orderItems.forEach(orderItem => {
-          this.db.collection(`orders/${orderId}/orderItems`).add(orderItem);
-        });
+
+  addTest(): void {
+    this.db.collection('restaurants').doc(this.userId).collection('orders')
+      .add(this.dummyOrders[1])
+      .then(ref => {
+        console.log(ref);
       });
-    }
+  }
+
+  ngOnDestroy(): void {
+    this.authChangedSubs.unsubscribe();
   }
 
 }

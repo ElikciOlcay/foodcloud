@@ -6,4 +6,6 @@ export interface Order {
   date?: Date;
   status?: string;
   orderItems: OrderItem[];
+  price: number;
+  accepted: boolean;
 }
