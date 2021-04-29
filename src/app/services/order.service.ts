@@ -16,7 +16,6 @@ export class OrderService implements OnDestroy{
   selectedOrderChanged = new Subject<Order>();
   ordersChanged = new Subject<Order[]>();
   private userId: string;
-  private orders: Order[];
 
   sound = new Howl({
     src: ['../../assets/sounds/bell.wav']
