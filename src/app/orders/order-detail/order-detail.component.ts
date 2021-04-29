@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectedOrderQuery } from 'src/app/queries/orders.query';
+import { OrdersQuery } from 'src/app/queries/orders.query';
 import { Order } from '../../models/order.model';
 
 @Component({
@@ -12,11 +12,11 @@ export class OrderDetailComponent implements OnInit {
   order: Order;
 
   constructor(
-    private orderQuery: SelectedOrderQuery
+    private orderQuery: OrdersQuery
   ) { }
 
   ngOnInit(): void {
-    this.orderQuery.selectFirst().subscribe( order => {
+    this.orderQuery.selectActive().subscribe( order => {
       this.order = order;
     });
   }

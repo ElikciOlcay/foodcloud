@@ -6,7 +6,7 @@ import { catchError, map, share } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import {Howl, Howler} from 'howler';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrderStore, SelectedOrderStore } from '../store/orders.store';
+import { OrderStore } from '../store/orders.store';
 
 @Injectable({
   providedIn: 'root'
@@ -41,16 +41,11 @@ export class OrderService implements OnDestroy{
 
   constructor(
     private orderStore: OrderStore,
-    private selectedOrder: SelectedOrderStore,
     private db: AngularFirestore,
     private auth: AuthService,
     private snackBar: MatSnackBar
     )
     {}
-
-  selectOrder(order: Order): void {
-    this.selectedOrder.set({order});
-  }
 
   getOrders(): void {
     this.userId = this.auth.getCurrentUserId();
