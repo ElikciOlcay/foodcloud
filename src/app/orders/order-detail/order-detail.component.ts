@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { SelectedOrderQuery } from 'src/app/queries/orders.query';
 import { Order } from '../../models/order.model';
-import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -11,16 +10,15 @@ import { OrderService } from '../../services/order.service';
 export class OrderDetailComponent implements OnInit {
 
   order: Order;
-  selectedOrderSubscription: Subscription;
 
-  constructor(private orderService: OrderService) { }
+  constructor(
+    private orderQuery: SelectedOrderQuery
+  ) { }
 
   ngOnInit(): void {
-    this.selectedOrderSubscription = this.orderService.selectedOrderChanged.subscribe(
-      {
-        next: order => this.order = order
-      }
-    );
+    this.orderQuery.selectFirst().subscribe( order => {
+      this.order = order;
+    });
   }
 
 }

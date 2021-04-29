@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { EventManager } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
-import { Order } from '../../models/order.model';
+import { Observable, Subscription } from 'rxjs';
+import { Order, OrderStatusModel } from '../../models/order.model';
 import { OrderService } from '../../services/order.service';
 import {Howl, Howler} from 'howler';
+import { OrdersQuery } from 'src/app/queries/orders.query';
 
 @Component({
   selector: 'app-order-list',
@@ -15,43 +15,50 @@ import {Howl, Howler} from 'howler';
 export class OrderListComponent implements OnInit, AfterViewInit{
 
   orders = new MatTableDataSource<Order>();
-  selectedOrder: Order;
-  selectedOrderSubscription: Subscription;
-  orderSubscription: Subscription;
   displayedColumns: string[] = ['name'];
+  selectLoading$: Observable<boolean>;
+  orderStatus = new OrderStatusModel();
+  selectedOrder: Order;
+
+
+  @ViewChild('filter') filter$;
+  @ViewChild(MatPaginator) paninator: MatPaginator;
+
 
   sound = new Howl({
     src: ['../../assets/sounds/bell.wav']
   });
 
-  @ViewChild(MatPaginator) paninator: MatPaginator;
-
-  constructor(private orderService: OrderService) { }
+  constructor(
+    private orderService: OrderService,
+    private orderQuery: OrdersQuery,
+  ) { }
 
   ngOnInit(): void {
-    // tslint:disable-next-line: deprecation
-    this.selectedOrderSubscription = this.orderService.selectedOrderChanged.subscribe(order => {
-      this.selectedOrder = order;
-    });
-    // tslint:disable-next-line: deprecation
-    this.orderSubscription = this.orderService.ordersChanged.subscribe(order => {
-      this.orders.data = order;
-    });
+    this.filterOrders(this.orderStatus.new);
+    this.selectLoading$ = this.orderQuery.selectLoading();
     this.orderService.getOrders();
   }
 
+
   filterOrders(filter: string): void {
-    this.orderService.filterOrders(filter);
+    this.orderQuery.selectAll({
+      filterBy: entity => entity.status === filter
+    }).subscribe( order => {
+      this.orders.data = order;
+
+      if (order.length) {
+        this.onSelectOrder(order[0]);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.orderService.selectOrder(this.orders.data[0]);
-    }, 500);
     this.orders.paginator = this.paninator;
-  }
+ }
 
   onSelectOrder(order: Order): void {
+    this.selectedOrder = order;
     this.orderService.selectOrder(order);
   }
 

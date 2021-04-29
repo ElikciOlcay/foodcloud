@@ -4,12 +4,12 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <form class="loginForm" fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
       <input matInput type="email" id=" " formControlName="email" placeholder="Email">
       <mat-error *ngIf="loginForm.get('email').invalid">Ungültige Email</mat-error>
   </mat-form-field>
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="outline">
     <mat-label>Passwort</mat-label>
       <input matInput type="password" formControlName="password" placeholder="Passwort">
     </mat-form-field>

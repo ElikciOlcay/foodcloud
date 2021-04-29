@@ -6,17 +6,17 @@
     </div>
     <div class="filter-button-group" fxlayout fxLayoutAlign="center">
       <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-        <mat-button-toggle checked="true" (change)="filterOrders($event.value)" value="New">Neu</mat-button-toggle>
-        <mat-button-toggle (change)="filterOrders($event.value)" value="Küche">Küche</mat-button-toggle>
-        <mat-button-toggle (change)="filterOrders($event.value)" value="Lieferung">Lieferung</mat-button-toggle>
+        <mat-button-toggle  checked="true" (change)="filterOrders($event.value)" [value]=orderStatus.new #filter>Neu</mat-button-toggle>
+        <mat-button-toggle (change)="filterOrders($event.value)" #filter [value]=orderStatus.kitchen>Küche</mat-button-toggle>
+        <mat-button-toggle (change)="filterOrders($event.value)" #filter value="delivery">Lieferung</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
       <table mat-table [dataSource]="orders">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td class="menu-item"  (click)="onSelectOrder(element)" mat-cell *matCellDef="let element">
-            {{ element.name }}
+          <td class="menu-item" [ngStyle]="{'color': (element === selectedOrder) ? '#673ab7' : 'black'}" (click)="onSelectOrder(element)" mat-cell *matCellDef="let element">
+           {{ element.name }}
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -26,6 +26,8 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-order-detail></app-order-detail>
+    <ng-container *ngIf="selectedOrder">
+      <app-order-detail id="{{selectedOrder.id}}"></app-order-detail>
+    </ng-container>
   </mat-sidenav-content>
 </mat-sidenav-container>

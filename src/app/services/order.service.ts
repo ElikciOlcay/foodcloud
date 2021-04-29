@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Subject, Subscription } from 'rxjs';
-import { Order } from '../models/order.model';
-import { map, share } from 'rxjs/operators';
+import { Observable, Subject, Subscription, throwError } from 'rxjs';
+import { Order, OrderStatusModel} from '../models/order.model';
+import { catchError, map, share } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import {Howl, Howler} from 'howler';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { OrderStore, SelectedOrderStore } from '../store/orders.store';
 
 @Injectable({
   providedIn: 'root'
@@ -25,22 +27,29 @@ export class OrderService implements OnDestroy{
       name: 'Johannes Huber',
       orderItems: [{name: 'Pizza'}, {name: 'Cola'}],
       price: 12.90,
-      accepted: true
+      accepted: true,
+      status: new OrderStatusModel().new
     },
     {
-      name: 'Olcay Elikci',
-      orderItems: [{name: 'Spaghetti'}, {name: 'Cola'}],
+      name: 'Aras Elikci',
+      orderItems: [{name: 'Spaghetti'}, {name: 'Fanta'}],
       price: 12.90,
-      accepted: false
+      accepted: false,
+      status: new OrderStatusModel().kitchen
     }
   ];
 
-  constructor(private db: AngularFirestore, private auth: AuthService) {
-    this.addTest();
-  }
+  constructor(
+    private orderStore: OrderStore,
+    private selectedOrder: SelectedOrderStore,
+    private db: AngularFirestore,
+    private auth: AuthService,
+    private snackBar: MatSnackBar
+    )
+    {}
 
   selectOrder(order: Order): void {
-    this.selectedOrderChanged.next(order);
+    this.selectedOrder.set({order});
   }
 
   getOrders(): void {
@@ -48,27 +57,23 @@ export class OrderService implements OnDestroy{
     this.db.collection('restaurants').doc(this.userId).collection('orders')
       .snapshotChanges()
       .pipe(
-        map(ordersFromDb => ordersFromDb
-          .map(data => {
+        map(ordersFromDb => ordersFromDb.map(data => {
             const orders = data.payload.doc.data() as Order;
             const id = data.payload.doc.id;
             return { ...orders, id };
-          }
-          )
-        )
-      ).subscribe((orders: Order[]) => {
-        this.orders = orders;
-        this.ordersChanged.next(this.orders);
+            }
+          ),
+        ),
+        catchError(this.errorHandler)
+      ).subscribe( orders => {
+        this.orderStore.set(orders);
       });
   }
 
 
-
-  filterOrders(status: string): void {
-    const filteredOrders = this.orders.filter(item => {
-      return item.status === status;
-    });
-    this.ordersChanged.next(filteredOrders);
+  errorHandler(error: string): Observable<any> {
+    this.snackBar.open(error);
+    return throwError(error);
   }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
 
   private authSubs: Subscription;
   isAuth: boolean;
@@ -27,6 +27,10 @@ export class NavigationComponent implements OnInit {
 
   navToLogin(): void {
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy(): void {
+    this.authSubs.unsubscribe();
   }
 
 }
