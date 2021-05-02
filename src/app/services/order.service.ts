@@ -51,6 +51,7 @@ export class OrderService implements OnDestroy{
     {}
 
   getOrders(): void {
+    debugger
     this.userId = this.auth.getCurrentUser().uid;
     this.db.collection('restaurants').doc(this.userId).collection('orders')
       .snapshotChanges()

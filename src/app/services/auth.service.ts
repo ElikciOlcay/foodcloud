@@ -56,11 +56,11 @@ export class AuthService {
   }
 
   getCurrentUser(): UserModel {
-    let user: UserModel;
-    this.authQuery.selectFirst().subscribe(user => {
-      user = user
+    let user: UserModel[];
+    this.authQuery.selectAll().subscribe(usert => {
+      user = usert
     })
-    return user;
+    return user[0];
   }
 
   setUser(uid: string): void {
@@ -81,8 +81,4 @@ export class AuthService {
         }
       })
   }
-
-
-
-
 }
