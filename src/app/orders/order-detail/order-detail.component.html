@@ -8,7 +8,7 @@
 <div>
   <h2>Order Items</h2>
   <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of order.orderItems">{{ item.name }}</mat-list-item>
+    <mat-list-item role="listitem" *ngFor="let item of order.orderItems">{{ item.menu.name }}</mat-list-item>
   </mat-list>
 </div>
 </section>

@@ -1,4 +1,5 @@
+import { Menu } from "./menu.model";
+
 export interface OrderItem {
-  name: string;
-  id?: string;
+  menu: Menu
 }

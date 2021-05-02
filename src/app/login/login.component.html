@@ -15,6 +15,11 @@
     </mat-form-field>
     <button type="submit" mat-raised-button color="primary" [disabled]="!loginForm.valid">Submit</button>
   </form>
+  <mat-card-footer>
+    <mat-card-actions>
+      <mat-spinner diameter="50" *ngIf="isLoading$ | async"></mat-spinner>
+    </mat-card-actions>
+  </mat-card-footer>
 </mat-card>
 </div>
 

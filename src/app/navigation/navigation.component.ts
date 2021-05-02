@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { AuthQuery } from '../queries/auth.queries';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -8,17 +9,18 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css']
 })
-export class NavigationComponent implements OnInit, OnDestroy {
+export class NavigationComponent implements OnInit {
 
-  private authSubs: Subscription;
-  isAuth: boolean;
+  isAuth$: Observable<boolean>;
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private authQuery: AuthQuery
+    ) { }
 
   ngOnInit(): void {
-    this.authSubs = this.auth.authChanged.subscribe(authStatus => {
-      this.isAuth = authStatus;
-    });
+    this.isAuth$ = this.authQuery.isLoggedIn;
   }
 
   logOut(): void {
@@ -27,10 +29,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   navToLogin(): void {
     this.router.navigate(['/']);
-  }
-
-  ngOnDestroy(): void {
-    this.authSubs.unsubscribe();
   }
 
 }

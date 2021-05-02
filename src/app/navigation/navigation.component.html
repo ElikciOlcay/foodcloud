@@ -4,7 +4,7 @@
   </div>
   <div fxFlex fxLayout fxLayoutAlign="end">
     <ul fxLayout fxLayoutGap="20px" class="nav-items">
-      <div fxLayout *ngIf="isAuth" >
+      <div fxLayout *ngIf="isAuth$ | async" >
         <li>
           <mat-slide-toggle #online color="primary" checked="true">{{online.checked? 'online' : 'offline'}}</mat-slide-toggle>
         </li>
@@ -12,7 +12,7 @@
           <button mat-button (click)="logOut()">Sign Out</button>
         </li>
       </div>
-      <li *ngIf="!isAuth">
+      <li *ngIf="!isAuth$ | async">
         <button mat-button (click)="navToLogin()">Log In</button>
       </li>
     </ul>

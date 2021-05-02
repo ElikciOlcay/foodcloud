@@ -1,47 +1,39 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators'
 import { UserModel } from '../models/user.model';
+import { AuthQuery } from '../queries/auth.queries';
+import { AuthStore } from '../store/auth.store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  isAuthenticated: boolean;
-  authChanged = new Subject<boolean>();
-  loadingChanged = new Subject<boolean>();
   authState: any;
+  user: UserModel;
 
-  constructor(private auth: AngularFireAuth, private router: Router, private snackBar: MatSnackBar) {
-    this.initAuthListener();
-  }
-
-
-  initAuthListener(): void {
-    this.auth.authState.subscribe(authState => {
-      if (authState) {
-        this.authState = authState;
-        this.isAuthenticated = true;
-        this.authChanged.next(true);
-        this.router.navigate(['/orders']);
-      } else {
-        this.isAuthenticated = false;
-        this.authChanged.next(false);
-        this.router.navigate(['']);
-      }
-    });
+  constructor(
+    private db: AngularFirestore,
+    private authStore: AuthStore,
+    private authQuery: AuthQuery,
+    private auth: AngularFireAuth,
+    private router: Router,
+    private snackBar: MatSnackBar) {
   }
 
   loginUser(user: UserModel): void {
-    this.loadingChanged.next(true);
+    this.authStore.setLoading(true);
     this.auth.signInWithEmailAndPassword(user.email, user.password)
       .then(result => {
-        this.loadingChanged.next(false);
+      this.authStore.update({isAuth: true});
+      this.setUser(result.user.uid);
+      this.authStore.setLoading(false);
       }).catch(err => {
-        this.loadingChanged.next(false);
+        this.authStore.setLoading(false);
         this.snackBar.open(err.message, '', {
           duration: 3000
         });
@@ -53,16 +45,44 @@ export class AuthService {
   }
 
   logOut(): void {
-    this.auth.signOut();
+    this.auth.signOut().then( res => {
+      this.authStore.update({isAuth: false});
+      this.router.navigate(['']);
+    })
   }
 
   isAuth(): boolean {
-    return this.isAuthenticated;
+    return this.authQuery.isAuth;
   }
 
-  getCurrentUserId(): string {
-    return this.isAuthenticated ? this.authState.uid : null;
+  getCurrentUser(): UserModel {
+    let user: UserModel;
+    this.authQuery.selectFirst().subscribe(user => {
+      user = user
+    })
+    return user;
   }
+
+  setUser(uid: string): void {
+    const userDoc = this.db.doc<UserModel>('users/' + uid);
+    userDoc.snapshotChanges()
+      .pipe(
+        map(changes => {
+          const data = changes.payload.data() as UserModel;
+          const uid = changes.payload.id;
+          return {uid, ...data}
+        })
+      ).subscribe( user => {
+        if( this.authQuery.isAuth && user.admin ){
+          this.user = user;
+          this.authStore.set([user]);
+          this.authStore.update({isAuth: true});
+          this.router.navigate(['/orders']);
+        }
+      })
+  }
+
+
 
 
 }

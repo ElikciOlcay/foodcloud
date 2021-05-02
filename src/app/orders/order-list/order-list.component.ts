@@ -18,10 +18,10 @@ export class OrderListComponent implements OnInit, AfterViewInit, OnDestroy{
   orders = new MatTableDataSource<Order>();
   displayedColumns: string[] = ['name'];
   selectLoading$: Observable<boolean>;
-  orderStatus = new OrderStatusModel();
-  selectedOrder: Order;
+  selectedOrder$: Observable<Order>;
+  activeOrder: Order;
   orderSubs: Subscription;
-  selectedOrderSubs: Subscription;
+  orderStatus = new OrderStatusModel();
 
 
   @ViewChild('filter') filter$;
@@ -61,9 +61,8 @@ export class OrderListComponent implements OnInit, AfterViewInit, OnDestroy{
 
   onSelectOrder(order: Order): void {
     this.orderStore.setActive(order.id);
-    this.selectedOrderSubs = this.orderQuery.selectActive().subscribe( selectedOrder => {
-      this.selectedOrder = selectedOrder;
-    });
+    this.selectedOrder$ = this.orderQuery.selectActive();
+    this.activeOrder = this.orderQuery.getActive();
   }
 
   makeOrder(): void {
@@ -71,9 +70,7 @@ export class OrderListComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    debugger
     this.orderSubs.unsubscribe();
-    this.selectedOrderSubs.unsubscribe();
   }
 
 }

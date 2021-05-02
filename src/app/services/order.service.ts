@@ -7,6 +7,8 @@ import { AuthService } from './auth.service';
 import {Howl, Howler} from 'howler';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrderStore } from '../store/orders.store';
+import { Menu } from '../models/menu.model';
+import { OrderItem } from '../models/order-item';
 
 @Injectable({
   providedIn: 'root'
@@ -21,19 +23,21 @@ export class OrderService implements OnDestroy{
     src: ['../../assets/sounds/bell.wav']
   });
 
-  private dummyOrders: Order[] = [
+  private orderItems: OrderItem[] = [
     {
-      name: 'Johannes Huber',
-      orderItems: [{name: 'Pizza'}, {name: 'Cola'}],
-      price: 12.90,
-      accepted: true,
-      status: new OrderStatusModel().new
+      menu: {name: 'Pizza', price: 10.90}
     },
     {
-      name: 'Aras Elikci',
-      orderItems: [{name: 'Spaghetti'}, {name: 'Fanta'}],
-      price: 12.90,
-      accepted: false,
+      menu: {name: 'Bier', price: 2.90}
+    }
+  ]
+
+  private dummyOrders: Order[] = [
+    {
+      name: 'Özgür Elikci',
+      orderItems: this.orderItems,
+      price: 13.90,
+      accepted: true,
       status: new OrderStatusModel().kitchen
     }
   ];
@@ -47,7 +51,7 @@ export class OrderService implements OnDestroy{
     {}
 
   getOrders(): void {
-    this.userId = this.auth.getCurrentUserId();
+    this.userId = this.auth.getCurrentUser().uid;
     this.db.collection('restaurants').doc(this.userId).collection('orders')
       .snapshotChanges()
       .pipe(
@@ -73,7 +77,7 @@ export class OrderService implements OnDestroy{
 
   addTest(): void {
     this.db.collection('restaurants').doc(this.userId).collection('orders')
-      .add(this.dummyOrders[1])
+      .add(this.dummyOrders[0])
       .then(ref => {
         console.log(ref);
       });

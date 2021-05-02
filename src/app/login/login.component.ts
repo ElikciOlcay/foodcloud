@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
+import { AuthQuery } from '../queries/auth.queries';
 import { AuthService } from '../services/auth.service';
+import { AuthStore } from '../store/auth.store';
 
 @Component({
   selector: 'app-login',
@@ -11,15 +14,22 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent implements OnInit {
 
   errorMessage: string;
+  isLoading$: Observable<boolean>;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private auth: AuthService) { }
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private authQuery: AuthQuery,
+    private authStore: AuthStore
+    ) { }
 
   ngOnInit(): void {
+    this.isLoading$ = this.authQuery.selectLoading();
   }
 
   onSubmit(): void {
