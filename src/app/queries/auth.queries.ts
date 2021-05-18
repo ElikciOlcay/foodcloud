@@ -6,7 +6,7 @@ import { AuthState, AuthStore } from '../store/auth.store';
 @Injectable({providedIn: 'root'})
 export class AuthQuery extends QueryEntity<AuthState, UserModel> {
 
-  isLoggedIn = this.select(state => !!state.isAuth)
+  isLoggedIn = this.select(state => !!state.isAuth);
 
   constructor(protected store: AuthStore) {
     super(store);

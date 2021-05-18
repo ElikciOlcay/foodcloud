@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
 import { AuthQuery } from '../queries/auth.queries';
 import { AuthService } from '../services/auth.service';
-import { AuthStore } from '../store/auth.store';
+
 
 @Component({
   selector: 'app-login',
@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private authQuery: AuthQuery,
-    private authStore: AuthStore
     ) { }
 
   ngOnInit(): void {

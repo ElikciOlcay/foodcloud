@@ -23,6 +23,16 @@ export class AuthService {
     private auth: AngularFireAuth,
     private router: Router,
     private snackBar: MatSnackBar) {
+      this.authStore.setLoading(false);
+  }
+
+  initAuthListener(): void {
+    this.authQuery.isLoggedIn
+      .subscribe(auth => {
+        if (auth) {
+
+        }
+      });
   }
 
   loginUser(user: UserModel): void {
@@ -48,7 +58,7 @@ export class AuthService {
     this.auth.signOut().then( res => {
       this.authStore.update({isAuth: false});
       this.router.navigate(['']);
-    })
+    });
   }
 
   isAuth(): boolean {
@@ -58,8 +68,8 @@ export class AuthService {
   getCurrentUser(): UserModel {
     let user: UserModel[];
     this.authQuery.selectAll().subscribe(usert => {
-      user = usert
-    })
+      user = usert;
+    });
     return user[0];
   }
 
@@ -70,15 +80,15 @@ export class AuthService {
         map(changes => {
           const data = changes.payload.data() as UserModel;
           const uid = changes.payload.id;
-          return {uid, ...data}
+          return {uid, ...data};
         })
       ).subscribe( user => {
-        if( this.authQuery.isAuth && user.admin ){
+        if (this.authQuery.isAuth && user.admin ){
           this.user = user;
           this.authStore.set([user]);
           this.authStore.update({isAuth: true});
           this.router.navigate(['/orders']);
         }
-      })
+      });
   }
 }

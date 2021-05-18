@@ -15,7 +15,6 @@ import { OrderItem } from '../models/order-item';
 })
 export class OrderService implements OnDestroy{
 
-  selectedOrderChanged = new Subject<Order>();
   ordersChanged = new Subject<Order[]>();
   private userId: string;
 
@@ -30,7 +29,7 @@ export class OrderService implements OnDestroy{
     {
       menu: {name: 'Bier', price: 2.90}
     }
-  ]
+  ];
 
   private dummyOrders: Order[] = [
     {
@@ -51,7 +50,6 @@ export class OrderService implements OnDestroy{
     {}
 
   getOrders(): void {
-    debugger
     this.userId = this.auth.getCurrentUser().uid;
     this.db.collection('restaurants').doc(this.userId).collection('orders')
       .snapshotChanges()
