@@ -15,4 +15,5 @@ export class AuthQuery extends QueryEntity<AuthState, UserModel> {
   get isAuth(): boolean {
     return this.getValue().isAuth;
   }
+
 }

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { OrderService } from '../services/order.service';
 
 @Component({
   selector: 'app-home',
@@ -9,12 +7,7 @@ import { OrderService } from '../services/order.service';
 })
 export class HomeComponent implements OnInit {
 
-  loginForm = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required]
-  });
-
-  constructor(private fb: FormBuilder, private os: OrderService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

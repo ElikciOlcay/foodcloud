@@ -13,7 +13,6 @@ import { AuthStore } from '../store/auth.store';
 })
 export class AuthService {
 
-  authState: any;
   user: UserModel;
 
   constructor(
@@ -26,14 +25,6 @@ export class AuthService {
       this.authStore.setLoading(false);
   }
 
-  initAuthListener(): void {
-    this.authQuery.isLoggedIn
-      .subscribe(auth => {
-        if (auth) {
-
-        }
-      });
-  }
 
   loginUser(user: UserModel): void {
     this.authStore.setLoading(true);
@@ -85,7 +76,7 @@ export class AuthService {
       ).subscribe( user => {
         if (this.authQuery.isAuth && user.admin ){
           this.user = user;
-          this.authStore.set([user]);
+          this.authStore.add(user);
           this.authStore.update({isAuth: true});
           this.router.navigate(['/orders']);
         }

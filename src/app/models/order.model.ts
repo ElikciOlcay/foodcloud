@@ -1,14 +1,17 @@
-import { ID } from '@datorama/akita';
 import { OrderItem } from './order-item';
 
 export class OrderStatusModel {
-  id?: ID;
   readonly new = 'new';
   readonly kitchen = 'kitchen';
+  readonly finished = 'finished';
+
+  getStateList(): string[] {
+    return [this.new, this.kitchen, this.finished];
+  }
 }
 
 export interface Order {
-  id?: ID;
+  id?: string;
   name: string;
   date?: Date;
   status: string;

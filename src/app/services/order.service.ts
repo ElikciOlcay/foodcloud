@@ -1,19 +1,19 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, Subject, Subscription, throwError } from 'rxjs';
-import { Order, OrderStatusModel} from '../models/order.model';
+import { Observable, Subject, throwError } from 'rxjs';
+import { Order, OrderStatusModel } from '../models/order.model';
 import { catchError, map, share } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import {Howl, Howler} from 'howler';
+import { Howl, Howler } from 'howler';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrderStore } from '../store/orders.store';
-import { Menu } from '../models/menu.model';
 import { OrderItem } from '../models/order-item';
+import { ID } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService implements OnDestroy{
+export class OrderService implements OnDestroy {
 
   ordersChanged = new Subject<Order[]>();
   private userId: string;
@@ -24,10 +24,10 @@ export class OrderService implements OnDestroy{
 
   private orderItems: OrderItem[] = [
     {
-      menu: {name: 'Pizza', price: 10.90}
+      menu: { name: 'Pizza', price: 10.90 }
     },
     {
-      menu: {name: 'Bier', price: 2.90}
+      menu: { name: 'Bier', price: 2.90 }
     }
   ];
 
@@ -46,8 +46,7 @@ export class OrderService implements OnDestroy{
     private db: AngularFirestore,
     private auth: AuthService,
     private snackBar: MatSnackBar
-    )
-    {}
+  ) { }
 
   getOrders(): void {
     this.userId = this.auth.getCurrentUser().uid;
@@ -55,16 +54,26 @@ export class OrderService implements OnDestroy{
       .snapshotChanges()
       .pipe(
         map(ordersFromDb => ordersFromDb.map(data => {
-            const orders = data.payload.doc.data() as Order;
-            const id = data.payload.doc.id;
-            return { ...orders, id };
-            }
-          ),
+          const orders = data.payload.doc.data() as Order;
+          const id = data.payload.doc.id;
+          return { ...orders, id };
+        }
+        ),
         ),
         catchError(this.errorHandler)
-      ).subscribe( orders => {
+      ).subscribe(orders => {
         this.orderStore.set(orders);
       });
+  }
+
+  updateOrder(order: Order, status: string): void {
+    const newStatus = new OrderStatusModel().new;
+    this.db.collection('restaurants').doc(this.userId).collection<Order>('orders').doc<Order>(order.id)
+      .update({
+        ...order,
+        status
+      }
+    );
   }
 
 

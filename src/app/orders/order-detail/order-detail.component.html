@@ -2,7 +2,7 @@
   <mat-toolbar color="primary">
     <div class="order-toolbar" fxLayout="row" fxLayoutAlign="space-between">
       <h1>{{ order.name }}</h1>
-      <button mat-raised-button color="basic">Test Order</button>
+      <button *ngIf="order.status !== orderStateModel.finished" (click)="changeOrderState()" mat-raised-button color="basic">{{ nextStatus }}</button>
     </div>
   </mat-toolbar>
 <div>

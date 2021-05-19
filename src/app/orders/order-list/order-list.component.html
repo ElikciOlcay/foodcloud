@@ -8,7 +8,7 @@
       <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
         <mat-button-toggle  checked="true" (change)="filterOrders($event.value)" [value]=orderStatus.new #filter>Neu</mat-button-toggle>
         <mat-button-toggle (change)="filterOrders($event.value)" #filter [value]=orderStatus.kitchen>Küche</mat-button-toggle>
-        <mat-button-toggle (change)="filterOrders($event.value)" #filter value="delivery">Lieferung</mat-button-toggle>
+        <mat-button-toggle (change)="filterOrders($event.value)" #filter [value]=orderStatus.finished>Lieferung</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
@@ -27,7 +27,7 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <ng-container *ngIf="selectedOrder$ | async">
-      <app-order-detail [order]="selectedOrder$ | async"></app-order-detail>
+      <app-order-detail></app-order-detail>
     </ng-container>
   </mat-sidenav-content>
 </mat-sidenav-container>
