@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav  #sidenav mode="side" opened class="example-sidenav">
+  <mat-sidenav  #sidenav mode="side" opened>
     <div fxLayout fxLayoutAlign="center center" class="orderContainerHeader">
       <h2>Orders</h2>
       <button mat-button (click)="makeOrder()">test order</button>
@@ -12,11 +12,14 @@
       </mat-button-toggle-group>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
+      <div *ngIf="loading$ | async ">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
       <table mat-table [dataSource]="orders">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
           <td class="menu-item" [ngStyle]="{'color': (element === activeOrder) ? '#673ab7' : 'black'}" (click)="onSelectOrder(element)" mat-cell *matCellDef="let element">
-           {{ element.name }}
+           {{ element.customer.firstName }} {{ element.customer.lastName}}
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

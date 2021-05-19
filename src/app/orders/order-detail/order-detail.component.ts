@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OrdersQuery } from 'src/app/queries/orders.query';
 import { OrderService } from 'src/app/services/order.service';
 import { Order, OrderStatusModel } from '../../models/order.model';
@@ -13,6 +14,7 @@ export class OrderDetailComponent implements OnInit, AfterViewInit {
   order: Order;
   orderStateModel = new OrderStatusModel();
   nextStatus: string;
+  loading$: Observable<boolean>;
 
   constructor(private os: OrderService, private orderQuery: OrdersQuery) { }
 
@@ -26,6 +28,7 @@ export class OrderDetailComponent implements OnInit, AfterViewInit {
       this.order = order;
       this.setNextOrderState();
     });
+    this.loading$ = this.orderQuery.selectLoading();
   }
 
   changeOrderState(): void {

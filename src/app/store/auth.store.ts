@@ -13,7 +13,7 @@ export function createInitialState(): AuthState {
 }
 
 @Injectable({ providedIn: 'root'})
-@StoreConfig({name: 'user'})
+@StoreConfig({name: 'user', resettable: true})
 export class AuthStore extends EntityStore<AuthState, UserModel> {
   constructor() {
     super(createInitialState());

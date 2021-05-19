@@ -22,6 +22,7 @@ export class OrderListComponent implements OnInit, AfterViewInit, OnDestroy{
   activeOrder: Order;
   orderSubs: Subscription;
   orderStatus = new OrderStatusModel();
+  loading$: Observable<boolean>;
 
 
   @ViewChild('filter') filter$;
@@ -43,6 +44,7 @@ export class OrderListComponent implements OnInit, AfterViewInit, OnDestroy{
     this.filterOrders(this.orderStatus.new);
     this.selectLoading$ = this.orderQuery.selectLoading();
     this.orderService.getOrders();
+    this.loading$ = this.orderQuery.selectLoading();
   }
 
 
@@ -60,7 +62,9 @@ export class OrderListComponent implements OnInit, AfterViewInit, OnDestroy{
  }
 
   onSelectOrder(order: Order): void {
+    this.orderStore.setLoading(true);
     this.orderStore.setActive(order.id);
+    this.orderStore.setLoading(false);
     this.selectedOrder$ = this.orderQuery.selectActive();
     this.activeOrder = this.orderQuery.getActive();
   }

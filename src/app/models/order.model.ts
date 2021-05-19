@@ -10,9 +10,19 @@ export class OrderStatusModel {
   }
 }
 
+export interface Customer {
+  firstName: string;
+  lastName: string;
+  street: string;
+  nr: string;
+  plz: string;
+  city: string;
+  tel: string;
+}
+
 export interface Order {
   id?: string;
-  name: string;
+  customer: Customer;
   date?: Date;
   status: string;
   orderItems: OrderItem[];

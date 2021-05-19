@@ -1,14 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subject, throwError } from 'rxjs';
-import { Order, OrderStatusModel } from '../models/order.model';
+import { Customer, Order, OrderStatusModel } from '../models/order.model';
 import { catchError, map, share } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Howl, Howler } from 'howler';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrderStore } from '../store/orders.store';
 import { OrderItem } from '../models/order-item';
-import { ID } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
@@ -22,22 +21,36 @@ export class OrderService implements OnDestroy {
     src: ['../../assets/sounds/bell.wav']
   });
 
+  private customer: Customer = {
+    firstName: 'Özgür',
+    lastName: 'Elikci',
+    street: 'Erszstraße',
+    nr: '22',
+    plz: '5500',
+    city: 'Bischofshofen',
+    tel: '069917058498'
+  };
+
   private orderItems: OrderItem[] = [
     {
-      menu: { name: 'Pizza', price: 10.90 }
+      menu: { name: 'Pizza', price: 10.90 },
+      quanitity: 1,
+      total: 10.90
     },
     {
-      menu: { name: 'Bier', price: 2.90 }
+      menu: { name: 'Bier', price: 2.90 },
+      quanitity: 2,
+      total: 5.80
     }
   ];
 
   private dummyOrders: Order[] = [
     {
-      name: 'Özgür Elikci',
+      customer: this.customer,
       orderItems: this.orderItems,
       price: 13.90,
       accepted: true,
-      status: new OrderStatusModel().kitchen
+      status: new OrderStatusModel().new
     }
   ];
 
@@ -54,10 +67,10 @@ export class OrderService implements OnDestroy {
       .snapshotChanges()
       .pipe(
         map(ordersFromDb => ordersFromDb.map(data => {
-          const orders = data.payload.doc.data() as Order;
-          const id = data.payload.doc.id;
-          return { ...orders, id };
-        }
+            const orders = data.payload.doc.data() as Order;
+            const id = data.payload.doc.id;
+            return { ...orders, id };
+            }
         ),
         ),
         catchError(this.errorHandler)
@@ -67,7 +80,6 @@ export class OrderService implements OnDestroy {
   }
 
   updateOrder(order: Order, status: string): void {
-    const newStatus = new OrderStatusModel().new;
     this.db.collection('restaurants').doc(this.userId).collection<Order>('orders').doc<Order>(order.id)
       .update({
         ...order,

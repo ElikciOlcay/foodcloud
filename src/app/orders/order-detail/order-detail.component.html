@@ -6,9 +6,13 @@
     </div>
   </mat-toolbar>
 <div>
+  <div *ngIf="loading$ | async " fxlayout="row" fxLayoutAlign="center center">
+    <mat-spinner fxFlexAlign="center center" diameter="50"></mat-spinner>
+  </div>
   <h2>Order Items</h2>
   <mat-list role="list">
     <mat-list-item role="listitem" *ngFor="let item of order.orderItems">{{ item.menu.name }}</mat-list-item>
   </mat-list>
 </div>
 </section>
+

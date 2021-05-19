@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators'
+import { map } from 'rxjs/operators';
 import { UserModel } from '../models/user.model';
 import { AuthQuery } from '../queries/auth.queries';
 import { AuthStore } from '../store/auth.store';
@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   logOut(): void {
-    this.auth.signOut().then( res => {
+    this.auth.signOut().then( () => {
       this.authStore.update({isAuth: false});
       this.router.navigate(['']);
     });
@@ -78,6 +78,9 @@ export class AuthService {
           this.user = user;
           this.authStore.add(user);
           this.authStore.update({isAuth: true});
+          this.snackBar.open(`Hallo ${user.name}`, '', {
+            duration: 2000
+          });
           this.router.navigate(['/orders']);
         }
       });
